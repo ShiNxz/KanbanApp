@@ -1,0 +1,73 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+	--toastify-font-family: 'Rubik', sans-serif !important;
+}
+
+html,
+body {
+	padding: 0;
+	margin: 0;
+	font-family: 'Rubik', sans-serif;
+	direction: rtl;
+	height: 100%;
+	position: unset !important;
+	-ms-overflow-style: none; /* IE and Edge */
+	scrollbar-width: none; /* Firefox */
+	&::-webkit-scrollbar {
+		display: none;
+	}
+
+	background-color: #fafafa;
+	scroll-behavior: smooth;
+
+	display: flex;
+	flex-direction: column;
+}
+
+.nextui-user-name {
+	color: #fff !important;
+}
+
+.nextui-table-header-row > th:first-child {
+	padding-left: 0;
+	padding-right: var(--nextui-space-8);
+
+	border-top-left-radius: 0;
+	border-bottom-left-radius: 0;
+
+	border-top-right-radius: var(--nextui-radii-md);
+	border-bottom-right-radius: var(--nextui-radii-md);
+}
+
+.nextui-table-header-row > th:last-child {
+	padding-left: var(--nextui-space-8);
+	padding-right: 0;
+
+	border-top-left-radius: var(--nextui-radii-md);
+	border-bottom-left-radius: var(--nextui-radii-md);
+
+	border-top-right-radius: 0;
+	border-bottom-right-radius: 0;
+}
+
+.nextui-table-header-row > th {
+	text-align: right;
+}
+
+.nextui-table-cell {
+	padding-right: var(--nextui-space-8);
+	padding-left: var(--nextui-space-8);
+}
+
+.rdp {
+	--rdp-cell-size: 30px !important;
+}
+
+.rdp-nav {
+	direction: ltr;
+}

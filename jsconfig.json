@@ -1,0 +1,23 @@
+{
+	"compilerOptions": {
+		"module": "commonjs",
+		"target": "es6",
+		"noEmit": true,
+		"baseUrl": ".",
+		"jsx": "react",
+		"checkJs": true,
+		"paths": {
+			"@/pages/*": ["pages/*"],
+			"@/components/*": ["components/*"],
+			"@/public/*": ["public/*"],
+			"@/assets/*": ["public/assets/*"],
+			"@/styles/*": ["styles/*"],
+			"@/utils/*": ["utils/*"],
+			"@/func/*": ["utils/functions/*"],
+			"@/data/*": ["utils/data/*"],
+			"@/models/*": ["utils/models/*"],
+			"@/slices/*": ["utils/slices/*"],
+		}
+	},
+	"exclude": ["node_modules"]
+}
