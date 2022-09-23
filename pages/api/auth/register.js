@@ -6,6 +6,7 @@ import jwt from 'jsonwebtoken'
 
 import db from '@/utils/db'
 import User from '@/models/User'
+import Board from '@/utils/models/Board'
 
 const handler = async (req, res) => {
 	await db()
@@ -39,10 +40,37 @@ const handler = async (req, res) => {
 
 			const hashedPass = await hash(password.value, 10)
 
+			const defaultBoards = []
+
+			let createdBoard = await Board.create({
+				title: 'Pending',
+			})
+
+			defaultBoards.push(createdBoard._id)
+
+			createdBoard = await Board.create({
+				title: 'In Progress',
+			})
+
+			defaultBoards.push(createdBoard._id)
+
+			createdBoard = await Board.create({
+				title: 'Done',
+			})
+
+			defaultBoards.push(createdBoard._id)
+
+			createdBoard = await Board.create({
+				title: 'Canceled',
+			})
+
+			defaultBoards.push(createdBoard._id)
+
 			const createdUser = await User.create({
 				userId: v4(),
 				username,
 				password: hashedPass,
+				boards: defaultBoards,
 			})
 
 			const token = jwt.sign(

@@ -9,9 +9,11 @@ import { toast } from 'react-toastify'
 import cookie from 'js-cookie'
 import useAuth from '@/utils/hooks/useAuth'
 import Axios from '@/utils/functions/Axios'
+import { useRouter } from 'next/router'
 
 const LoginComponent = () => {
 	const [state, dispatch] = useReducer(Reducer, initialState)
+	const router = useRouter()
 	const { mutate } = useAuth()
 
 	const setUsername = (e) => dispatch({ type: ACTIONS.SET_USERNAME, payload: e.target.value })
@@ -50,9 +52,10 @@ const LoginComponent = () => {
 			closeOnClick: true,
 		})
 
-		setTimeout(() => {
+		setTimeout(async () => {
 			cookie.set('token', data.token, { expires: 30 })
-			mutate()
+			await mutate()
+			router.push('/')
 		}, 1200)
 	}
 
@@ -83,7 +86,6 @@ const LoginComponent = () => {
 				clearable={false}
 				id='password'
 				bordered
-				fullWidth
 				value={state.password.value}
 				color='primary'
 				size='lg'
@@ -99,7 +101,6 @@ const LoginComponent = () => {
 			<Spacer y={1} />
 
 			<Button
-				full
 				color='secondary'
 				onClick={submitForm}
 				loading={state.loading || undefined}

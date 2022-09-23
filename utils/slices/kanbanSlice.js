@@ -4,7 +4,7 @@ const initialState = {
 	cardModal: {
 		open: false,
 		boardId: null,
-		card: null,
+		cardId: null,
 	},
 
 	addBoard: {

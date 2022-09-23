@@ -20,6 +20,7 @@ const App = ({ Component, pageProps }) => {
 					closeButton
 					closeOnClick
 					autoClose={3000}
+					position='bottom-right'
 				/>
 			</Provider>
 		</NextUIProvider>

@@ -12,13 +12,13 @@ const useAuth = () => {
 
 	const handleLogout = async () => {
 		cookie.remove('token')
-		mutate()
-		router.push('/login')
-		return toast.warning('התנתקת בהצלחה!', {
+		await mutate()
+		toast.warning('התנתקת בהצלחה!', {
 			autoClose: 3000,
 			closeButton: true,
 			closeOnClick: true,
 		})
+		return router.push('/login')
 	}
 
 	return {

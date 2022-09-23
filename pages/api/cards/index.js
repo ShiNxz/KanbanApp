@@ -75,8 +75,77 @@ const handler = async (req, res) => {
 
 			return res.status(200).json({ success: true })
 		}
+
 		// Get a specifc board by user, id, or all
 		case 'GET': {
+			if (!req.cookies.token) return res.status(200).json({ success: false, error: 'failed to auth' }) // Check if the user is logged in
+			if (!req.query.cardId && !req.query.userId)
+				return res.status(200).json({ success: false, error: 'cardId is missing' })
+
+			let { cardId, userId } = req.query
+
+			if (userId) {
+				let cards = await Card.find({ users: { $all: [userId] } })
+				console.log(cards)
+				return res.status(200).json({ success: true, cards })
+			} else if (cardId) {
+				let card = await Card.where('_id').equals(cardId).populate('users', 'username')
+				if (card.length < 1) return res.status(200).json({ success: false, error: 'card not found' })
+				card = card[0]
+				return res.status(200).json({ success: true, card })
+			}
+		}
+
+		// Reorder the cards
+		case 'PUT': {
+			const { cardId, destination, source } = req.body
+
+			// Check if the card is exists
+			let card = await Card.where('_id').equals(cardId)
+			if (card.length < 1) return res.status(200).json({ success: false, error: 'card not found' })
+			card = card[0]
+
+			// Check if the destination is the source board
+			if (destination.droppableId === source.droppableId) {
+				let board = await Board.where('_id').equals(destination.droppableId)
+				if (board.length < 1)
+					return res.status(200).json({ success: false, error: 'board not found' })
+				board = board[0]
+
+				// Remove the card from the cards array
+				board.cards.splice(source.index, 1)
+
+				// From the destiniation board, add the card to the cards array
+				board.cards.splice(destination.index, 0, cardId)
+				
+				// Save the source board
+				board.save()
+
+			} else {
+				// Check if the destination is exists
+				let destinationBoard = await Board.where('_id').equals(destination.droppableId)
+				if (destinationBoard.length < 1)
+					return res.status(200).json({ success: false, error: 'destination board not found' })
+				destinationBoard = destinationBoard[0]
+
+				// Check if the source is exists
+				let sourceBoard = await Board.where('_id').equals(source.droppableId)
+				if (sourceBoard.length < 1)
+					return res.status(200).json({ success: false, error: 'source board not found' })
+				sourceBoard = sourceBoard[0]
+
+				// From the destiniation board, add the card to the cards array
+				destinationBoard.cards.splice(destination.index, 0, cardId)
+				// Save the destination board
+				destinationBoard.save()
+
+				// From the source board, remove the card from the cards array
+				sourceBoard.cards.splice(source.index, 1)
+				// Save the source board
+				sourceBoard.save()
+			}
+
+			return res.status(200).json({ success: true })
 		}
 
 		default:

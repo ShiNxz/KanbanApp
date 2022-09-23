@@ -5,7 +5,7 @@
 		"noEmit": true,
 		"baseUrl": ".",
 		"jsx": "react",
-		"checkJs": true,
+		//"checkJs": true,
 		"paths": {
 			"@/pages/*": ["pages/*"],
 			"@/components/*": ["components/*"],

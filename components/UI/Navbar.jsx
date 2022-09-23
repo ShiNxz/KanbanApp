@@ -1,16 +1,23 @@
+import useAuth from '@/utils/hooks/useAuth'
 import Link from 'next/link'
+import NextButton from './Next/Button'
 
 const Navbar = () => {
+	const { handleLogout } = useAuth()
+
 	return (
-		<div className='bg-slate-100 fixed w-full p-4'>
+		<div className='bg-slate-100 fixed w-full p-4 flex flex-row justify-between items-center'>
 			<PageLink
-				title='התחברות'
-				link='/login'
+				title='עמוד ראשי'
+				link='/'
 			/>
-			<PageLink
-				title='הרשמה'
-				link='/register'
-			/>
+			<NextButton
+				color='primary'
+				size='xs'
+				onClick={handleLogout}
+			>
+				התנתק
+			</NextButton>
 		</div>
 	)
 }
@@ -18,9 +25,7 @@ const Navbar = () => {
 const PageLink = ({ title, link }) => {
 	return (
 		<Link href={link}>
-			<a className='text-neutral-900 hover:text-blue-500 duration-300 text-lg ml-2'>
-				{title}
-			</a>
+			<a className='text-neutral-900 hover:text-blue-500 duration-300 text-lg ml-2'>{title}</a>
 		</Link>
 	)
 }

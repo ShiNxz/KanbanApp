@@ -15,18 +15,28 @@ import { MdDeleteForever } from 'react-icons/md'
 import { toast } from 'react-toastify'
 import useAuth from '@/utils/hooks/useAuth'
 import Axios from '@/utils/functions/Axios'
+import DateToFullDate from '@/utils/functions/Date'
+import useSWR from 'swr'
+import fetcher from '@/utils/fetcher'
 
 const AddCardModal = ({ mutate }) => {
 	const { loggedIn, user } = useAuth()
+	const { data } = useSWR('/api/users', fetcher)
 	const { addCard } = useSelector((state) => state.kanban)
 	const [state, dispatch] = useReducer(Reducer, initialState)
 	const reduxDispatch = useDispatch()
 
+	console.log(state.users)
+
 	const closeModal = () => reduxDispatch(closeCardModal())
 
 	useEffect(() => {
-		console.log(addCard.card)
-		dispatch({ type: ACTIONS.RESET_STATE, def: addCard.card ? { ...initialState, ...addCard.card } : initialState })
+		dispatch({
+			type: ACTIONS.RESET_STATE,
+			def: addCard.card
+				? { ...initialState, ...addCard.card, dueDate: new Date(addCard?.card?.dueDate) }
+				: initialState,
+		})
 	}, [addCard.open])
 
 	const handleAddCard = async () => {
@@ -148,43 +158,60 @@ const AddCardModal = ({ mutate }) => {
 							<Dropdown.Button
 								flat
 								className='my-4'
+								color='secondary'
 								disabled={state.loading || undefined}
 							>
-								הוספת משתמשים
+								שיתוף משתמשים
 							</Dropdown.Button>
 							<Dropdown.Menu
 								aria-label='users'
-								onAction={(id) => dispatch({ type: ACTIONS.ADD_USER, payload: id })}
+								onAction={(id) =>
+									dispatch({
+										type: ACTIONS.ADD_USER,
+										payload:
+											(data && data.users && data.users.filter((u) => u._id === id)[0]) ||
+											null,
+									})
+								}
 							>
-								{/* {users.map(
-									({ id, username }) =>
-										user.id !== id && <Dropdown.Item key={id}>{username}</Dropdown.Item>
-								)} */}
+								{data &&
+									data.users
+										.filter(
+											({ _id }) =>
+												_id !== user._id && state.users.filter((u) => u._id === _id).length < 1
+										)
+										.map(({ _id, username }) => (
+											<Dropdown.Item key={_id}>{username}</Dropdown.Item>
+										))}
 							</Dropdown.Menu>
 						</Dropdown>
 						<div className='flex flex-col items-center'>
-							<span>משתמשים:</span>
+							<span className='font-medium'>משתמשים:</span>
 							{state.users.map((u) => (
 								<div className='flex flex-row items-center'>
 									{u.username}
-									{user.id !== u.id && (
+									{user._id !== u._id && (
 										<MdDeleteForever
 											className='duration-300 hover:text-blue-500 cursor-pointer mr-2'
-											onClick={() => dispatch({ type: ACTIONS.DEL_USER, payload: u.id })}
+											onClick={() => dispatch({ type: ACTIONS.DEL_USER, payload: u._id })}
 										/>
 									)}
 								</div>
 							))}
+							{state.users.length > 0 && (
+								<span className='text-xs mt-2'>המשתמשים יקבלו גישה לצפות ולערוך את המשימה</span>
+							)}
 						</div>
 					</div>
-					<div className='flex flex-col'>
-						<span className='font-medium !mb-0'>תאריך סיום (דד-ליין)</span>
+					<div className='flex flex-col border-r pr-6 mr-4 border-slate-500/20'>
+						<span className='font-medium !mb-0'>תאריך סיום (דד-ליין):</span>
 						<DayPicker
 							mode='single'
 							selected={state.dueDate}
 							onSelect={(date) => dispatch({ type: ACTIONS.SET_DUE_DATE, payload: date })}
 							pagedNavigation
 						/>
+						<span>התאריך שנבחר: {DateToFullDate(state.dueDate)}</span>
 					</div>
 				</Modal.Body>
 				<Modal.Footer>

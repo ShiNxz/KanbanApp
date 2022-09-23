@@ -1,9 +1,8 @@
-
 export const initialState = {
 	title: '',
 	description: '',
 	dueDate: new Date(),
-	label: 0, 
+	label: 0,
 	users: [],
 
 	loading: false,
@@ -45,7 +44,7 @@ const Reducer = (state, action) => {
 		case ACTIONS.SET_DUE_DATE: {
 			return {
 				...state,
-				dueDate: action.payload,
+				dueDate: new Date(action.payload),
 			}
 		}
 
@@ -60,16 +59,13 @@ const Reducer = (state, action) => {
 			// Check if the user exists
 			//if (users.filter(({ id }) => id == action.payload).length < 1) return state
 			// Check if the user is already in the list
-			if (state.users.filter(({ id }) => id == action.payload).length > 0) return state
-			// Get the user object
-			const userToAdd = users.filter(({ id }) => id == action.payload)[0]
+			if (state.users.filter(({ _id }) => _id == action.payload._id).length > 0) return state
 
-			state.users.push(userToAdd)
-			return { ...state }
+			return { ...state, users: [...state.users, action.payload] }
 		}
 
 		case ACTIONS.DEL_USER: {
-			return { ...state, users: state.users.filter(({ id }) => id !== action.payload) }
+			return { ...state, users: state.users.filter(({ _id }) => _id !== action.payload) }
 		}
 
 		case ACTIONS.SET_LOADING: {

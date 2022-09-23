@@ -9,9 +9,11 @@ import { toast } from 'react-toastify'
 import cookie from 'js-cookie'
 import useAuth from '@/utils/hooks/useAuth'
 import Axios from '@/utils/functions/Axios'
+import { useRouter } from 'next/router'
 
 const RegisterComponent = () => {
 	const [state, dispatch] = useReducer(Reducer, initialState)
+	const router = useRouter()
 
 	const { mutate } = useAuth()
 
@@ -51,9 +53,10 @@ const RegisterComponent = () => {
 		})
 
 		// Set the cookie tokon & mutate the auth stateq
-		setTimeout(() => {
+		setTimeout(async () => {
 			cookie.set('token', data.token, { expires: 30 })
-			mutate()
+			await mutate()
+			router.push('/')
 		}, 1200)
 	}
 
@@ -100,7 +103,7 @@ const RegisterComponent = () => {
 			<Spacer y={1} />
 
 			<Button
-				full
+				fullWidth
 				color='primary'
 				onClick={submitForm}
 				loading={state.loading || undefined}

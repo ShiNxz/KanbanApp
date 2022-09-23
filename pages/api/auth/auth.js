@@ -28,8 +28,8 @@ const handler = async (req, res) => {
 						})
 
 					if (user.length > 0) {
-						const { userId, username, boards } = user[0]
-						decoded = { userId, username, boards }
+						const { _id, userId, username, boards } = user[0]
+						decoded = { _id, userId, username, boards }
 					} else decoded = null
 				} catch (e) {
 					console.error(e)
