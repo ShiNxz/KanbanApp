@@ -53,11 +53,9 @@ const RegisterComponent = () => {
 		})
 
 		// Set the cookie tokon & mutate the auth stateq
-		setTimeout(async () => {
-			cookie.set('token', data.token, { expires: 30 })
-			await mutate()
-			router.push('/')
-		}, 1200)
+		cookie.set('token', data.token, { expires: 30 })
+		await mutate()
+		router.push('/')
 	}
 
 	return (

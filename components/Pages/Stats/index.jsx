@@ -6,7 +6,6 @@ import { getLabelProps } from '@/utils/data/Labels'
 
 const Stats = () => {
 	const { data } = useSWR('/api/cards', fetcher)
-	console.log(data)
 
 	// get the data and calculate the stats
 	const [stats, setStats] = useState({
@@ -45,8 +44,6 @@ const Stats = () => {
 
 		setStats({ users, labels })
 	}, [data])
-
-	console.log(Object.entries(stats.users))
 
 	return (
 		<div>

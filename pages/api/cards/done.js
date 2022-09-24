@@ -53,7 +53,6 @@ const handler = async (req, res) => {
 			// remove the card from the board
 			let board = await Board.find({ cards: { $all: [cardId] } })
 			if (board.length < 1) return res.status(200).json({ success: false, error: 'board not found' }) // Check if the card exists in one of the boards
-			console.log(board)
 
 			board = board[0]
 			board.cards = board.cards.filter((card) => card != cardId)

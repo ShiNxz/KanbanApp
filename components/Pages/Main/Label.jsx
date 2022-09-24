@@ -1,7 +1,6 @@
 import { getLabelProps } from '@/utils/data/Labels'
 
 const Label = ({ label, className }) => {
-	console.log(label)
 	const { label: labelText, color: labelColor } = getLabelProps(label)
 
 	return (

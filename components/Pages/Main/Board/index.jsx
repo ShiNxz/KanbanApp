@@ -32,7 +32,6 @@ const Board = ({ title, cards, shared, id, mutate, provided }) => {
 				return card
 			})
 		)
-		console.log(newCards)
 	}, [filters])
 
 	const { data: sharedCards } = useSWR(

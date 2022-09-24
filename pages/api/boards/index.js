@@ -3,7 +3,6 @@ import { verify } from 'jsonwebtoken'
 import db from '@/utils/db'
 import User from '@/models/User'
 import Board from '@/utils/models/Board'
-import Card from '@/utils/models/Card'
 
 const handler = async (req, res) => {
 	await db()

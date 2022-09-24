@@ -43,13 +43,7 @@ const handler = async (req, res) => {
 			const defaultBoards = []
 
 			let createdBoard = await Board.create({
-				title: 'Pending',
-			})
-
-			defaultBoards.push(createdBoard._id)
-
-			createdBoard = await Board.create({
-				title: 'In Progress',
+				title: 'Canceled',
 			})
 
 			defaultBoards.push(createdBoard._id)
@@ -61,7 +55,13 @@ const handler = async (req, res) => {
 			defaultBoards.push(createdBoard._id)
 
 			createdBoard = await Board.create({
-				title: 'Canceled',
+				title: 'In Progress',
+			})
+
+			defaultBoards.push(createdBoard._id)
+
+			createdBoard = await Board.create({
+				title: 'Pending',
 			})
 
 			defaultBoards.push(createdBoard._id)
