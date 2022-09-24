@@ -1,20 +1,8 @@
-import { useRouter } from 'next/router'
-
 import Head from '@/components/UI/Head'
 import { AnimatePresence, motion } from 'framer-motion'
 import Navbar from './Navbar'
-import useAuth from '@/utils/hooks/useAuth'
-import { useEffect } from 'react'
 
 const AuthLayout = ({ title, children }) => {
-	const router = useRouter()
-	const { loggedIn } = useAuth()
-
-	useEffect(() => {
-		// Check if the user is already logged in, if so, redirect to the home page
-		if (loggedIn) router.push('/')
-	}, [])
-
 	return (
 		<>
 			<Head title={title} />

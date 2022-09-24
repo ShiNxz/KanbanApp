@@ -1,13 +1,13 @@
-import Kanban from '@/components/Pages/Main'
 import Layout from '@/components/UI/Layout'
+import Stats from '@/components/Pages/Stats'
 import dbConnect from '@/utils/db'
 import User from '@/utils/models/User'
 import { verify } from 'jsonwebtoken'
 
 const Index = () => {
 	return (
-		<Layout title='עמוד ראשי'>
-			<Kanban />
+		<Layout title='סטטיסטיקות'>
+			<Stats />
 		</Layout>
 	)
 }

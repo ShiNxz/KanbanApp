@@ -1,8 +1,6 @@
 import { verify } from 'jsonwebtoken'
-
 import db from '@/utils/db'
 import User from '@/models/User'
-import Card from '@/models/Card'
 
 const handler = async (req, res) => {
 	await db()
@@ -24,6 +22,20 @@ const handler = async (req, res) => {
 							path: 'boards',
 							populate: {
 								path: 'cards',
+								populate: {
+									path: 'user',
+									select: 'username',
+								},
+							},
+						})
+						.populate({
+							path: 'boards',
+							populate: {
+								path: 'cards',
+								populate: {
+									path: 'users',
+									select: 'username',
+								},
 							},
 						})
 

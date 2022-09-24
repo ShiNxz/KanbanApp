@@ -2,7 +2,7 @@
 const Labels = [
 	{
 		label: 'דחוף',
-		color: 'bg-red-400',
+		color: 'bg-orange-400',
 	},
 	{
 		label: 'אפשר לחכות',
@@ -14,8 +14,14 @@ const Labels = [
 	},
 ]
 
-export const getLabelProps = (num) => {
-	return Labels[num]
+export const getLabelProps = (num) => Labels[num]
+
+// Auto labels for cards
+export const customLabels = {
+	dueDateOver: {
+		label: 'התאריך לביצוע עבר',
+		color: 'bg-red-500',
+	},
 }
 
 export default Labels

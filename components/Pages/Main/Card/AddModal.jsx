@@ -26,7 +26,7 @@ const AddCardModal = ({ mutate }) => {
 	const [state, dispatch] = useReducer(Reducer, initialState)
 	const reduxDispatch = useDispatch()
 
-	console.log(state.users)
+	console.log('card:', state)
 
 	const closeModal = () => reduxDispatch(closeCardModal())
 
@@ -102,6 +102,29 @@ const AddCardModal = ({ mutate }) => {
 		dispatch({ type: ACTIONS.SET_LOADING, payload: false })
 	}
 
+	const handleDone = async () => {
+		const { _id } = state
+		dispatch({ type: ACTIONS.SET_LOADING, payload: true })
+		// Send the request to the server to set the card as done
+		const { success, error } = await Axios('/api/cards/done', { cardId: _id }, 'POST')
+
+		if (success) {
+			toast.success('המשימה הועברה לארכיון המשימות', {
+				autoClose: 3000,
+				closeButton: true,
+				closeOnClick: true,
+			})
+			mutate()
+			closeModal()
+		} else
+			toast.error(error, {
+				autoClose: 3000,
+				closeButton: true,
+				closeOnClick: true,
+			})
+		dispatch({ type: ACTIONS.SET_LOADING, payload: false })
+	}
+
 	return (
 		loggedIn && (
 			<Modal
@@ -111,7 +134,9 @@ const AddCardModal = ({ mutate }) => {
 				onClose={closeModal}
 				width={700}
 			>
-				<Modal.Header>{addCard.card ? 'עריכת משימה' : 'הוספת משימה'}</Modal.Header>
+				<Modal.Header>
+					<h4>{addCard.card ? 'עריכת משימה' : 'הוספת משימה'}</h4>
+				</Modal.Header>
 				<Modal.Body className='!text-right !grid grid-cols-2 gap-4'>
 					<div className='flex flex-col'>
 						<Input
@@ -137,6 +162,7 @@ const AddCardModal = ({ mutate }) => {
 							loading={state.loading || undefined}
 							disabled={state.loading || undefined}
 						/>
+
 						<Dropdown>
 							<Dropdown.Button
 								flat
@@ -169,8 +195,7 @@ const AddCardModal = ({ mutate }) => {
 									dispatch({
 										type: ACTIONS.ADD_USER,
 										payload:
-											(data && data.users && data.users.filter((u) => u._id === id)[0]) ||
-											null,
+											(data && data.users && data.users.filter((u) => u._id === id)[0]) || null,
 									})
 								}
 							>
@@ -185,23 +210,28 @@ const AddCardModal = ({ mutate }) => {
 										))}
 							</Dropdown.Menu>
 						</Dropdown>
-						<div className='flex flex-col items-center'>
-							<span className='font-medium'>משתמשים:</span>
-							{state.users.map((u) => (
-								<div className='flex flex-row items-center'>
-									{u.username}
-									{user._id !== u._id && (
-										<MdDeleteForever
-											className='duration-300 hover:text-blue-500 cursor-pointer mr-2'
-											onClick={() => dispatch({ type: ACTIONS.DEL_USER, payload: u._id })}
-										/>
-									)}
-								</div>
-							))}
-							{state.users.length > 0 && (
-								<span className='text-xs mt-2'>המשתמשים יקבלו גישה לצפות ולערוך את המשימה</span>
-							)}
-						</div>
+						{state.users.length > 0 && (
+							<div className='flex flex-col items-center'>
+								<span className='font-medium'>משתמשים:</span>
+								{state.users.map((u) => (
+									<div
+										className='flex flex-row items-center'
+										key={u._id}
+									>
+										{u.username}
+										{user._id !== u._id && (
+											<MdDeleteForever
+												className='duration-300 hover:text-blue-500 cursor-pointer mr-2'
+												onClick={() => dispatch({ type: ACTIONS.DEL_USER, payload: u._id })}
+											/>
+										)}
+									</div>
+								))}
+								{state.users.length > 0 && (
+									<span className='text-xs mt-2'>המשתמשים יקבלו גישה לצפות במשימה</span>
+								)}
+							</div>
+						)}
 					</div>
 					<div className='flex flex-col border-r pr-6 mr-4 border-slate-500/20'>
 						<span className='font-medium !mb-0'>תאריך סיום (דד-ליין):</span>
@@ -220,15 +250,30 @@ const AddCardModal = ({ mutate }) => {
 						flat
 						color='error'
 						onClick={closeModal}
+						loading={state.loading || undefined}
 					>
 						ביטול
 					</NextButton>
+
+					{addCard.card && (
+						<NextButton
+							auto
+							flat
+							color='success'
+							onClick={handleDone}
+							loading={state.loading || undefined}
+						>
+							סמן משימה כבוצעה
+						</NextButton>
+					)}
+
 					{addCard.card && (
 						<NextButton
 							auto
 							flat
 							color='warning'
 							onClick={handleDelete}
+							loading={state.loading || undefined}
 						>
 							מחיקת המשימה
 						</NextButton>

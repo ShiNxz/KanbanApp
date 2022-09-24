@@ -2,7 +2,8 @@ import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
 	boards: [],
-	filters: { label: 'null', days: 'null' }, // show only priority, on filter Mode enabled, cant move cards
+	archivedBoards: [],
+	filters: { label: -1, days: -1 }, // show only priority, on filter Mode enabled, cant move cards
 }
 
 export const boardsSlice = createSlice({
@@ -12,13 +13,22 @@ export const boardsSlice = createSlice({
 		setBoards: (state, action) => {
 			state.boards = action.payload
 		},
+
+		setArchivedBoards: (state, action) => {
+			state.archivedBoards = action.payload
+		},
+
 		reorderBoards: (state, action) => {
-			const { destination, source } = action.payload
+			const { destination, source, type } = action.payload
+			if (type !== 'BOARDS') return
+
 			const [removed] = state.boards.splice(source.index, 1)
 			state.boards.splice(destination.index, 0, removed)
 		},
+
 		reorderCards: (state, action) => {
-			const { destination, source } = action.payload
+			const { destination, source, type } = action.payload
+			if (type !== 'CARDS') return
 
 			const sourceBoardIndex = state.boards.findIndex((board) => board._id === source.droppableId)
 			const destinationBoardIndex = state.boards.findIndex((board) => board._id === destination.droppableId)
@@ -33,6 +43,6 @@ export const boardsSlice = createSlice({
 	},
 })
 
-export const { setBoards, reorderBoards, reorderCards, setFilters } = boardsSlice.actions
+export const { setBoards, setArchivedBoards, reorderBoards, reorderCards, setFilters } = boardsSlice.actions
 
 export default boardsSlice.reducer

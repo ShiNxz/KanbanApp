@@ -87,12 +87,10 @@ const handler = async (req, res) => {
 						path: 'cards',
 					},
 				})
-
+				
 			if(user.length < 1) return res.status(200).json({ success: false, error: 'failed to auth' }) // If the user is not found, return an error
 
 			user = user[0]
-
-			console.log(req.body)
 
 			const [removed] = user.boards.splice(source.index, 1)
 			user.boards.splice(destination.index, 0, removed)

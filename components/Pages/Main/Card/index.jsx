@@ -1,33 +1,21 @@
+import { customLabels } from '@/utils/data/Labels'
+import DateFilter from '@/utils/functions/DateFilter'
 import { viewCard } from '@/utils/slices/kanbanSlice'
-import Button from '@nextui-org/react/cjs/button'
-import { useEffect, useState } from 'react'
+import Button from '@nextui-org/react/button'
 import { BiEditAlt } from 'react-icons/bi'
-import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
-import Label from '../Label'
+import Label, { CustomLabel } from '../Label'
 
-const Card = ({ boardId, id, title, label, handleEdit, data, shared, provided, snapshot }) => {
+const Card = ({ boardId, id, title, label, handleEdit, data, shared, provided, innerRef, dueDate, done }) => {
 	const reduxDispatch = useDispatch()
 
 	const handleEditCard = () => handleEdit(data)
 
 	const handleReadCard = () => reduxDispatch(viewCard({ boardId, cardId: id }))
 
-	const { filters } = useSelector((state) => state.boards)
-	const [isVisible, setIsVisible] = useState(true)
-
-	useEffect(() => {
-		if (filters.label == label || filters.label === 'null') {
-			setIsVisible(true)
-		} else {
-			setIsVisible(false)
-		}
-	}, [filters])
-	console.log(filters.label, label)
-
-	return shared ? isVisible && (
+	return shared || done ? (
 		<div
-			className='rounded-lg bg-slate-50 hover:bg-white duration-300 hover:shadow-lg py-6 px-4 my-2 flex flex-row justify-between items-center text-left cursor-pointer relative overflow-hidden'
+			className='rounded-lg bg-slate-50 hover:bg-white duration-300 hover:shadow-lg py-6 px-4 min-h-[4rem] mx-1 flex flex-row justify-between items-center text-left cursor-pointer relative overflow-hidden'
 			onClick={handleReadCard}
 		>
 			<div className='pl-12 text-right break-all'>
@@ -38,13 +26,13 @@ const Card = ({ boardId, id, title, label, handleEdit, data, shared, provided, s
 				<Label label={label} />
 			</div>
 		</div>
-	) : isVisible && (
+	) : (
 		<div
-			className='rounded-lg bg-slate-50 hover:bg-white duration-300 py-6 px-4 my-2 flex flex-row justify-between items-center text-left cursor- relative overflow-hidden'
+			className='rounded-lg bg-slate-50 hover:bg-white duration-300 py-6 px-4 mx-1 mb-2 min-h-[4rem] flex flex-row justify-between items-center text-left cursor-pointer relative overflow-hidden'
 			onClick={handleReadCard}
-			ref={provided?.innerRef}
-			{...provided?.draggableProps}
-			{...provided?.dragHandleProps}
+			ref={innerRef}
+			{...provided.draggableProps}
+			{...provided.dragHandleProps}
 		>
 			<div className='pl-12 text-right break-all'>
 				<span className='text-sm font-medium text-slate-900'>{title}</span>
@@ -63,8 +51,9 @@ const Card = ({ boardId, id, title, label, handleEdit, data, shared, provided, s
 				</Button>
 			)}
 
-			<div className='absolute top-1 left-1'>
+			<div className='absolute top-1 left-1 flex flex-row'>
 				<Label label={label} />
+				{DateFilter(dueDate, -2) && <CustomLabel label={customLabels.dueDateOver} />}
 			</div>
 		</div>
 	)

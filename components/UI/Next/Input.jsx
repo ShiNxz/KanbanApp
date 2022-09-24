@@ -23,7 +23,8 @@ const Input = (props) => {
 			contentRight={props.loading ? <Loading size='xs' /> : props.contentRight}
 			style={{ width: props.width || undefined }}
 			status={ color || props.color}
-			disabled={props.disabled || props.loading || undefined}
+			disabled={props.disabled || props.loading}
+			loading={undefined}
 			{...props}
 		/>
 	) : (
